@@ -4,65 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formularz E-dowód</title>
-    <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-
-.form-container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
-}
-
-h1 {
-    margin-bottom: 20px;
-    font-size: 24px;
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-}
-
-input, select {
-    width: calc(100% - 10px);
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #5cb85c;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #4cae4c;
-}
-</style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="form-container">
         <h1>Formularz E-dowód</h1>
-        <form action="edowod.html" method="post" enctype="multipart/form-data">
+        <form action="edowod.html" method="post" enctype="multipart/form-data" id="edowod-form">
             <label for="surname">Nazwisko:</label>
             <input type="text" id="surname" name="surname" required>
             
@@ -96,5 +43,23 @@ button:hover {
             <button type="submit">Wygeneruj e-dowód</button>
         </form>
     </div>
+    <script>
+        document.getElementById('edowod-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const params = new URLSearchParams();
+            formData.forEach((value, key) => {
+                params.append(key, value);
+            });
+
+            const photo = formData.get('photo');
+            const reader = new FileReader();
+            reader.onload = function() {
+                params.append('photo', reader.result);
+                window.location.href = 'edowod.html?' + params.toString();
+            };
+            reader.readAsDataURL(photo);
+        });
+    </script>
 </body>
 </html>
